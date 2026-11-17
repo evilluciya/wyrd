@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WYRD · Древо Вирд</title>
+<meta name="description" content="Объёмный атлас Древа Вирд: семь сфер, 21 путь, септенарный сигил, Сигил Девяти и двойной тетраэдр.">
+<meta name="theme-color" content="#050505">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+SC:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=202611171643">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="topnav" id="topnav">
+  <a href="#top" class="brand"><span class="brand-mark" aria-hidden="true"></span><span class="brand-text">Wyrd</span></a>
+  <div class="navlinks">
+    <a href="#s1">I</a><a href="#s2">II</a><a href="#s3">III</a><a href="#s4">IV</a><a href="#s5">V</a><a href="#s6">VI</a>
+  </div>
+  <a class="nav-tg tg-link" href="https://t.me/livinggad" target="_blank" rel="noopener" title="Канал разработчика" aria-label="Канал разработчика в Telegram"><svg class="tg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#229ED9"/><path fill="#fff" d="M5.5 11.8l11.6-4.5c.54-.2 1.01.13.83.95l-1.98 9.32c-.15.66-.54.82-1.09.51l-3-2.21-1.45 1.39c-.16.16-.3.3-.61.3l.21-3.05 5.56-5.02c.24-.21-.05-.33-.38-.12l-6.87 4.33-2.96-.92c-.64-.2-.66-.64.14-.95z"/></svg>LIVINGGAD</a>
+  <button class="btn btn-red btn-sm" data-atlas>Атлас 3D</button>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <svg class="hero-sigil" viewBox="-500 -500 1000 1000" aria-hidden="true" id="heroSigil"></svg>
+  <div class="hero-canvas" id="heroCanvas"></div>
+  <div class="hero-copy">
+    <p class="kicker">Септенарий · девять углов</p>
+    <h1 class="hero-title"><span>Wyrd</span><span>Древо Вирд</span></h1>
+    <p class="hero-lead">Семь сфер, двадцать один путь и одна Бездна. Древо раскрывается в сигил и собирается обратно — смотрите с любой стороны.</p>
+    <div class="hero-actions">
+      <button class="btn btn-red" data-atlas>Открыть атлас 3D</button>
+      <a class="btn btn-ghost" href="#s1">Как устроено ↓</a>
+    </div>
+  </div>
+  <ol class="hero-stats">
+    <li><b data-count="7">0</b><span>сфер</span></li>
+    <li><b data-count="21">0</b><span>путь</span></li>
+    <li><b data-count="9">0</b><span>линий</span></li>
+    <li><b data-count="3">0</b><span>скрытых</span></li>
+  </ol>
+  <p class="hero-hint">тяните — вращать · бросок — раскрутить</p>
+</header>
+
+<main>
+  <section class="sec" id="s1">
+    <div class="sec-head"><span class="num">I</span><div><h2>Древо Вирд</h2><p class="sub">Семь сфер от Луны к Сатурну. Коснитесь сферы.</p></div></div>
+    <div class="grid-card">
+      <div class="frame"><div id="vizTree" class="viz"></div>
+        <div class="viz-controls"><label class="toggle"><input type="checkbox" id="treeAll" checked><span></span>Все 21 путь</label><label class="toggle"><input type="checkbox" id="treeNo"><span></span>Номера путей</label></div>
+      </div>
+      <div class="frame card" id="treeCard"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="s2">
+    <div class="sec-head"><span class="num">II</span><div><h2>Септенарный сигил</h2><p class="sub">Те же семь сфер на окружности и девять прямых между ними.</p></div></div>
+    <div class="frame"><div id="vizSigil" class="viz viz-narrow"></div>
+      <div class="viz-controls" id="sigilCtl"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="s3">
+    <div class="sec-head"><span class="num">III</span><div><h2>Переход</h2><p class="sub">Ведите шкалу: Древо раскрывается в сигил. В атласе — по объёмным дугам.</p></div></div>
+    <div class="frame"><div id="vizMorph" class="viz viz-narrow"></div>
+      <div class="viz-controls"><span class="mono-l">Древо</span><input type="range" id="morphRange" min="0" max="100" value="0" class="range"><span class="mono-l">Сигил</span><button class="chip" data-atlas="morph">Смотреть в 3D</button></div>
+    </div>
+  </section>
+
+  <section class="sec" id="s4">
+    <div class="sec-head"><span class="num">IV</span><div><h2>Сигил Девяти</h2><p class="sub">Семь сфер, два пересечения, Земные и Звёздные Врата.</p></div></div>
+    <div class="frame"><div id="vizNine" class="viz viz-narrow"></div>
+      <div class="viz-controls" id="nineCtl"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="s5">
+    <div class="sec-head"><span class="num">V</span><div><h2>Двойной тетраэдр</h2><p class="sub">Каузальное и акаузальное с общим основанием в плоскости Солнца.</p></div></div>
+    <div class="frame"><div id="vizTetra" class="viz viz-narrow"></div>
+      <div class="viz-controls"><button class="chip" data-atlas="tetra">Раскрутить в 3D</button></div>
+    </div>
+  </section>
+
+  <section class="sec" id="s6">
+    <div class="sec-head"><span class="num">VI</span><div><h2>Соответствия</h2><p class="sub">Слово, процесс, звезда, камень, аромат и форма каждой сферы.</p></div></div>
+    <div class="spheres" id="sphereCards"></div>
+  </section>
+
+  <section class="sec sec-cta">
+    <div class="frame frame-cta">
+      <h2>Атлас в объёме</h2>
+      <p class="sub">Пять сцен, свободное вращение, карточка каждой сферы.</p>
+      <button class="btn btn-red" data-atlas>Открыть атлас</button>
+    </div>
+  </section>
+</main>
+
+<footer class="foot"><p class="mute">Wyrd · атлас Древа Вирд<br>Слава Сатане!<br>Канал разработчика: <a class="tg-link" href="https://t.me/livinggad" target="_blank" rel="noopener">@LIVINGGAD</a></p></footer>
+
+<!-- ============ ATLAS (full screen) ============ -->
+<div class="atlas" id="atlas" hidden>
+  <div class="atlas-canvas" id="atlasCanvas"></div>
+  <div class="atlas-vignette" aria-hidden="true"></div>
+
+  <div class="atlas-top">
+    <button class="icon-btn" id="atlasClose" aria-label="Закрыть">✕</button>
+    <div class="tabs" id="tabs"></div>
+    <button class="icon-btn" id="hintBtn" aria-label="Подсказка">💡</button>
+  </div>
+
+  <div class="atlas-tools" id="tools">
+    <button class="chip on" id="spinBtn">Авто-вращение</button>
+    <button class="chip on" id="allBtn">21 путь</button>
+    <button class="chip" id="noBtn">№ путей</button>
+    <button class="chip" id="resetBtn">Сброс</button>
+  </div>
+
+  <div class="atlas-status">
+    <div class="st-cap" id="stCap"></div>
+    <div class="st-text" id="stText"></div>
+    <div class="st-row">
+      <button class="chip" id="playBtn">Стоп</button>
+      <div class="timeline" id="timeline"><i></i><b></b></div>
+    </div>
+  </div>
+
+  <div class="sheet" id="sheet" hidden>
+    <h3 id="sheetTitle"></h3>
+    <div id="sheetBody" class="sheet-body"></div>
+    <div class="sheet-actions"><button class="btn btn-red btn-sm" id="sheetOk">Понятно</button></div>
+  </div>
+</div>
+
+<div class="tip" id="tip"></div>
+<script type="module" src="js/main.js?v=202611171643"></script>
+</body>
+</html>
